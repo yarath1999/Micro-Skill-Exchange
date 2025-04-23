@@ -1,0 +1,140 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f3f4f6;
+    margin: 0;
+    padding: 0;
+  }
+
+  .dashboard {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 1rem;
+  }
+
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .dashboard-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+
+  .btn-add {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+
+  .opportunity-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  }
+
+  .opportunity-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .opportunity-description {
+    margin-bottom: 1rem;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  .btn-apply {
+    background: #10b981;
+    color: white;
+  }
+
+  .btn-view {
+    background: #6b7280;
+    color: white;
+  }
+
+  .btn-edit {
+    background: #3b82f6;
+    color: white;
+  }
+
+  .btn-remove {
+    background: #ef4444;
+    color: white;
+  }
+
+  .filter-section {
+    margin-bottom: 2rem;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .dropdown-btn {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background-color: #fff;
+    cursor: pointer;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .dropdown-content label {
+    display: block;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+
+  .dropdown-content label:hover {
+    background-color: #f3f4f6;
+  }
+
+  .seeker-theme .btn-add,
+  .seeker-theme .btn-apply {
+    background-color: #10b981 !important;
+  }
+
+  .filter-section {
+    display: none;
+  }
+
+  .seeker-theme .filter-section {
+    display: block;
+  }

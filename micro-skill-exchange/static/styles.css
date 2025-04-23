@@ -11,7 +11,7 @@ body {
   }
   
   .hero {
-    background-image: url('assets/Society.jpg');
+    background-image: url('/micro-skill-exchange/assets/images/Society.jpg');
     padding: 3rem 1rem;
     text-align: center;
     background-position: center;

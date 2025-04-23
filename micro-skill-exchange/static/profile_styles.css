@@ -1,0 +1,98 @@
+.profile-container {
+    max-width: 800px;
+    margin: 3rem auto;
+    background: #f9fafb;
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .profile-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  
+  .profile-photo {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #2563eb;
+    margin-bottom: 1rem;
+  }
+  
+  #photo-upload {
+    display: block;
+    margin: 0.5rem auto 1.5rem;
+  }
+  
+  .profile-header h2 {
+    margin-top: 0;
+    font-size: 1.8rem;
+    color: #111827;
+  }
+  
+  .form-group {
+    margin-bottom: 1.8rem;
+  }
+  
+  .form-group label {
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.95rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    transition: 0.2s;
+  }
+  
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  }
+  
+  .form-group textarea {
+    resize: vertical;
+    height: 100px;
+  }
+  
+  .income-display {
+    font-weight: bold;
+    color: #10b981;
+    background: #ecfdf5;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    display: inline-block;
+  }
+  
+  .btn-save {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    padding: 0.85rem 2rem;
+    font-size: 1rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    margin-top: 2rem;
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    transition: 0.3s;
+  }
+  
+  .btn-save:hover {
+    background: #1e40af;
+  }
+  

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='profile_styles.css') }}" />
+</head>
+<body>
+  <div class="profile-container">
+    <div class="profile-header">
+      <h2 id="profile-title">Profile</h2>
+      <img id="profile-img" src="https://via.placeholder.com/120" class="profile-photo" />
+      <input type="file" id="photo-upload" />
+    </div>
+
+    <form id="profile-form">
+      <div class="form-group">
+        <label>Description</label>
+        <textarea name="description" placeholder="Describe yourself..."></textarea>
+      </div>
+
+      <div id="dynamic-fields"></div>
+
+      <button type="submit" class="btn-save">Save Profile</button>
+    </form>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get('type');
+    const title = document.getElementById('profile-title');
+    const dynamicFields = document.getElementById('dynamic-fields');
+    const photoUpload = document.getElementById('photo-upload');
+    const profileImg = document.getElementById('profile-img');
+
+    photoUpload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        profileImg.src = URL.createObjectURL(file);
+      }
+    });
+
+    if (type === 'provider') {
+      title.textContent = "Provider Profile";
+      dynamicFields.innerHTML = `
+        <div class="form-group">
+          <label>Work (Title + Description)</label>
+          <textarea name="work" placeholder="e.g. Logo Design - Created 50+ brand logos..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Types of Jobs Offered</label>
+          <input type="text" name="jobs" placeholder="e.g. Graphic Design, Frontend Dev" />
+        </div>
+        <div class="form-group">
+          <label>Expected Seeker Skills</label>
+          <input type="text" name="skills" placeholder="e.g. Figma, HTML/CSS, Canva" />
+        </div>
+        <div class="form-group">
+          <label>Contact Details</label>
+          <input type="text" name="contact" placeholder="e.g. email@example.com, +1234567890" />
+        </div>
+      `;
+    } else if (type === 'seeker') {
+      title.textContent = "Seeker Profile";
+      dynamicFields.innerHTML = `
+        <div class="form-group">
+          <label>Skill Set</label>
+          <input type="text" name="skills" placeholder="e.g. HTML, Python, Photoshop" />
+        </div>
+        <div class="form-group">
+          <label>Academic Qualification</label>
+          <input type="text" name="qualification" placeholder="e.g. B.Sc. Computer Science" />
+        </div>
+        <div class="form-group">
+          <label>Work Experience</label>
+          <textarea name="experience" placeholder="e.g. 1 year as freelance designer..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Total Income Earned</label>
+          <div class="income-display">₹18,500</div>
+        </div>
+      `;
+    } else {
+      title.textContent = "Profile";
+    }
+  </script>
+</body>
+</html>

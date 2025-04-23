@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard_styles.css') }}" />
+</head>
+<body>
+  <div id="dashboard" class="dashboard">
+    <div class="dashboard-header">
+      <div class="dashboard-title">Opportunities</div>
+      <button id="addOpportunityBtn" class="btn btn-add">Add Opportunity</button>
+    </div>
+
+    <div class="filter-section">
+      <div class="dropdown">
+        <button class="dropdown-btn" onclick="toggleDropdown()">Select Skills</button>
+        <div id="dropdownContent" class="dropdown-content">
+          <label><input type="checkbox" value="web development" onchange="filterBySkills()"> Web Development</label>
+          <label><input type="checkbox" value="graphic design" onchange="filterBySkills()"> Graphic Design</label>
+          <label><input type="checkbox" value="content writing" onchange="filterBySkills()"> Content Writing</label>
+          <label><input type="checkbox" value="digital marketing" onchange="filterBySkills()"> Digital Marketing</label>
+          <label><input type="checkbox" value="data entry" onchange="filterBySkills()"> Data Entry</label>
+        </div>
+      </div>
+    </div>
+
+    <div id="opportunitiesList">
+      <!-- Example card -->
+      <div class="opportunity-card" data-skills="web development">
+        <div class="opportunity-title">Web Developer Needed</div>
+        <div class="opportunity-description">Build a responsive landing page using HTML, CSS, and JavaScript.</div>
+        <div class="btn-group">
+          <button class="btn btn-apply">Apply</button>
+          <button class="btn btn-view">View Details</button>
+          <button class="btn btn-edit">Edit</button>
+          <button class="btn btn-remove">Remove</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const type = urlParams.get('type');
+    const dashboard = document.getElementById('dashboard');
+
+    if (type === 'seeker') {
+      dashboard.classList.add('seeker-theme');
+      document.getElementById('addOpportunityBtn').style.display = 'none';
+      document.querySelectorAll('.btn-edit, .btn-remove').forEach(btn => btn.style.display = 'none');
+    } else {
+      document.querySelectorAll('.btn-apply, .btn-view').forEach(btn => btn.style.display = 'none');
+    }
+
+    function toggleDropdown() {
+      const dropdown = document.getElementById('dropdownContent');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function filterBySkills() {
+      const checkboxes = document.querySelectorAll('#dropdownContent input[type="checkbox"]');
+      const selectedSkills = Array.from(checkboxes)
+        .filter(checkbox => checkbox.checked)
+        .map(checkbox => checkbox.value);
+
+      const cards = document.querySelectorAll('.opportunity-card');
+      cards.forEach(card => {
+        const skills = card.getAttribute('data-skills') || '';
+        const show = selectedSkills.length === 0 || selectedSkills.some(skill => skills.includes(skill));
+        card.style.display = show ? 'block' : 'none';
+      });
+    }
+
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropdown-btn')) {
+        const dropdowns = document.getElementsByClassName("dropdown-content");
+        for (let i = 0; i < dropdowns.length; i++) {
+          let openDropdown = dropdowns[i];
+          if (openDropdown.style.display === 'block') {
+            openDropdown.style.display = 'none';
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>

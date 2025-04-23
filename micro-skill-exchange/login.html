@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - MSE</title>
+  <link rel="stylesheet" href="signup_styles.css" />
+  <style id="role-theme-style"></style>
+</head>
+<body>
+  <header class="signup-header">
+    <h1 id="login-heading">Login</h1>
+    <p class="sub-heading">Access your Micro Skill Exchange dashboard</p>
+  </header>
+
+  <div class="signup-container">
+    <form class="signup-form">
+      <input type="email" name="email" placeholder="Email Address" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <button type="submit" class="btn">Login</button>
+    </form>
+    <p style="text-align:center; margin-top: 1rem;">
+      Don't have an account?
+      <a href="#" id="signup-link">Create one</a>
+    </p>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get('type');
+    const heading = document.getElementById('login-heading');
+    const themeStyle = document.getElementById('role-theme-style');
+    const signupLink = document.getElementById('signup-link');
+
+    let color = "#2563eb"; // default blue
+    let hover = "#1e40af"; // dark blue
+
+    if (type === 'provider') {
+      heading.textContent = "Login as Provider";
+      signupLink.href = "signup.html?type=provider";
+    } else if (type === 'seeker') {
+      heading.textContent = "Login as Seeker";
+      color = "#10b981"; // green
+      hover = "#059669"; // dark green
+      signupLink.href = "signup.html?type=seeker";
+    } else {
+      heading.textContent = "Login";
+      signupLink.href = "signup.html";
+    }
+
+    themeStyle.textContent = `
+      .signup-header h1 {
+        color: ${color};
+      }
+      .signup-form input:focus {
+        border-color: ${color};
+        box-shadow: 0 0 0 3px ${color}33;
+      }
+      .signup-form button {
+        background: ${color};
+      }
+      .signup-form button:hover {
+        background: ${hover};
+      }
+    `;
+  </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #333;
+  }
+  
+  h1, h2 {
+    text-align: center;
+  }
+  
+  .hero {
+    background-image: url('assets/Society.jpg');
+    padding: 3rem 1rem;
+    text-align: center;
+    background-position: center;
+  }
+  
+  .hero .light {
+    color: #888;
+  }
+  
+  .hero .bold {
+    color: #3b82f6;
+    font-weight: bold;
+  }
+  
+  .logo {
+    width: 100px;
+    margin: 1rem auto;
+  }
+  
+  .slogan {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .roles {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem 1rem;
+  }
+  
+  .role-card {
+    width: 300px;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  
+  .role-card img {
+    width: 80px;
+    margin-bottom: 1rem;
+  }
+  
+  .provider {
+    background: #bbd7f7;
+  }
+  
+  .seeker {
+    background: #acf4c6;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  
+  .section-title::after {
+    content: '';
+    width: 60px;
+    height: 3px;
+    background: #3b82f6;
+    display: block;
+    margin: 0.5rem auto 0;
+    border-radius: 3px;
+  }
+  
+  .about-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  .about-text {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    line-height: 1.8;
+  }
+  
+  .about-card {
+    background-color: #f3f4f6;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    border-radius: 12px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  }
+  
+  .about-card h3 {
+    margin-top: 0;
+    color: #2563eb;
+  }
+  
+  .about-card ul {
+    padding-left: 1.2rem;
+    margin: 0.5rem 0;
+  }
+  
+  .about-card ul li {
+    margin-bottom: 0.5rem;
+  }  
+  
+  .cta {
+    background: #fef2f2;
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  .btn {
+    display: inline-block;
+    background: #111;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    margin-top: 1rem;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+  }
+  
+  .btn:hover {
+    background: #333;
+  }
+  

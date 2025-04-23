@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up - MSE</title>
+  <link rel="stylesheet" href="signup_styles.css" />
+  <style id="role-theme-style"></style> <!-- Placeholder for dynamic theme -->
+</head>
+<body>
+  <header class="signup-header">
+    <h1 id="signup-heading">Sign Up</h1>
+    <p class="sub-heading">Join the Micro Skill Exchange community</p>
+  </header>
+
+  <div class="signup-container">
+    <form id="signup-form" class="signup-form">
+      <input type="text" name="name" placeholder="Full Name" required />
+      <input type="email" name="email" placeholder="Email Address" required />
+      <input type="password" name="password" placeholder="Password" required />
+
+      <div id="role-fields"></div>
+      
+      <button type="submit" class="btn">Create Account</button>
+    </form>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get('type');
+    const heading = document.getElementById('signup-heading');
+    const roleFields = document.getElementById('role-fields');
+    const roleTheme = document.getElementById('role-theme-style');
+    const form = document.getElementById('signup-form');
+
+    let color = "#2563eb"; // default: blue
+    let hover = "#1e40af";
+
+    if (type === 'provider') {
+      heading.textContent = "Sign Up as Provider";
+      roleFields.innerHTML = `
+        <input type="text" name="skill" placeholder="Offered Skill (e.g. Web Design)" required />
+        <input type="text" name="experience" placeholder="Experience (e.g. 2 years)" required />
+      `;
+    } else if (type === 'seeker') {
+      heading.textContent = "Sign Up as Seeker";
+      color = "#10b981"; // green
+      hover = "#059669";
+      roleFields.innerHTML = `
+        <input type="text" name="interest" placeholder="Area of Interest (e.g. UI Design)" required />
+        <input type="text" name="availability" placeholder="Availability (e.g. Weekends)" required />
+      `;
+    } else {
+      heading.textContent = "Sign Up";
+    }
+
+    roleTheme.textContent = `
+      .signup-header h1 {
+        color: ${color};
+      }
+      .signup-form input:focus {
+        border-color: ${color};
+        box-shadow: 0 0 0 3px ${color}33;
+      }
+      .signup-form button {
+        background: ${color};
+      }
+      .signup-form button:hover {
+        background: ${hover};
+      }
+    `;
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      window.location.href = `login.html?type=${type}`;
+    });
+  </script>
+</body>
+</html>

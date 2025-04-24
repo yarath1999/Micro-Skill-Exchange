@@ -11,7 +11,7 @@ body {
   }
   
   .hero {
-    background-image: url('/micro-skill-exchange/assets/images/Society.jpg');
+    background-image: url('images/Society.jpg');
     padding: 3rem 1rem;
     text-align: center;
     background-position: center;
@@ -34,6 +34,8 @@ body {
   .slogan {
     font-size: 1.2rem;
     margin-bottom: 1.5rem;
+    color: #000;
+    font-weight: bold;
   }
   
   .roles {

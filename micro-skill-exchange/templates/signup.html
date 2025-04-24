@@ -14,13 +14,13 @@
   </header>
 
   <div class="signup-container">
-    <form id="signup-form" class="signup-form">
-      <input type="text" name="name" placeholder="Full Name" required />
+    <form id="signup-form" class="signup-form" method="POST">
+      <input type="text" name="username" placeholder="Full Name" required />
       <input type="email" name="email" placeholder="Email Address" required />
       <input type="password" name="password" placeholder="Password" required />
 
       <div id="role-fields"></div>
-      
+
       <button type="submit" class="btn">Create Account</button>
     </form>
   </div>
@@ -31,7 +31,6 @@
     const heading = document.getElementById('signup-heading');
     const roleFields = document.getElementById('role-fields');
     const roleTheme = document.getElementById('role-theme-style');
-    const form = document.getElementById('signup-form');
 
     let color = "#2563eb"; // default: blue
     let hover = "#1e40af";
@@ -69,11 +68,6 @@
         background: ${hover};
       }
     `;
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      window.location.href = `login.html?type=${type}`;
-    });
   </script>
 </body>
 </html>

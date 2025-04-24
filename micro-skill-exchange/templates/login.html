@@ -14,7 +14,7 @@
   </header>
 
   <div class="signup-container">
-    <form class="signup-form">
+    <form class="signup-form" method="POST">
       <input type="email" name="email" placeholder="Email Address" required />
       <input type="password" name="password" placeholder="Password" required />
       <button type="submit" class="btn">Login</button>
@@ -37,15 +37,15 @@
 
     if (type === 'provider') {
       heading.textContent = "Login as Provider";
-      signupLink.href = "signup.html?type=provider";
+      signupLink.href = "signup?type=provider";
     } else if (type === 'seeker') {
       heading.textContent = "Login as Seeker";
       color = "#10b981"; // green
       hover = "#059669"; // dark green
-      signupLink.href = "signup.html?type=seeker";
+      signupLink.href = "signup?type=seeker";
     } else {
       heading.textContent = "Login";
-      signupLink.href = "signup.html";
+      signupLink.href = "signup";
     }
 
     themeStyle.textContent = `

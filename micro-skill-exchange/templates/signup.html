@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sign Up - MSE</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='signup_styles.css') }}" />
-  <style id="role-theme-style"></style> <!-- Placeholder for dynamic theme -->
+  <style id="role-theme-style"></style>
 </head>
 <body>
   <header class="signup-header">
@@ -14,15 +14,20 @@
   </header>
 
   <div class="signup-container">
-    <form id="signup-form" class="signup-form" method="POST">
+    <form id="signup-form" class="signup-form" method="POST" action="{{ url_for('signup') }}">
       <input type="text" name="username" placeholder="Full Name" required />
       <input type="email" name="email" placeholder="Email Address" required />
       <input type="password" name="password" placeholder="Password" required />
 
       <div id="role-fields"></div>
+      <input type="hidden" name="type" id="role-type" value="" />
 
       <button type="submit" class="btn">Create Account</button>
     </form>
+
+    <p class = "login-link">Already have an account? 
+      <a href="{{ url_for('login') }}">Login here</a>
+    </p>
   </div>
 
   <script>
@@ -31,19 +36,22 @@
     const heading = document.getElementById('signup-heading');
     const roleFields = document.getElementById('role-fields');
     const roleTheme = document.getElementById('role-theme-style');
+    const roleTypeInput = document.getElementById('role-type');
 
-    let color = "#2563eb"; // default: blue
+    let color = "#2563eb";
     let hover = "#1e40af";
 
     if (type === 'provider') {
       heading.textContent = "Sign Up as Provider";
+      roleTypeInput.value = "provider";
       roleFields.innerHTML = `
         <input type="text" name="skill" placeholder="Offered Skill (e.g. Web Design)" required />
         <input type="text" name="experience" placeholder="Experience (e.g. 2 years)" required />
       `;
     } else if (type === 'seeker') {
       heading.textContent = "Sign Up as Seeker";
-      color = "#10b981"; // green
+      roleTypeInput.value = "seeker";
+      color = "#10b981";
       hover = "#059669";
       roleFields.innerHTML = `
         <input type="text" name="interest" placeholder="Area of Interest (e.g. UI Design)" required />
@@ -51,6 +59,7 @@
       `;
     } else {
       heading.textContent = "Sign Up";
+      roleTypeInput.value = "general";
     }
 
     roleTheme.textContent = `

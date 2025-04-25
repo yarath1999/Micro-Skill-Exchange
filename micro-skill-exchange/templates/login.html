@@ -14,12 +14,15 @@
   </header>
 
   <div class="signup-container">
-    <form class="signup-form" method="POST">
+    <form class="signup-form" method="POST" action="{{ url_for('login') }}">
       <input type="email" name="email" placeholder="Email Address" required />
       <input type="password" name="password" placeholder="Password" required />
+      <input type="hidden" name="type" id="role-input" value="">
+
       <button type="submit" class="btn">Login</button>
     </form>
-    <p style="text-align:center; margin-top: 1rem;">
+
+    <p class="login-link">
       Don't have an account?
       <a href="#" id="signup-link">Create one</a>
     </p>
@@ -31,23 +34,32 @@
     const heading = document.getElementById('login-heading');
     const themeStyle = document.getElementById('role-theme-style');
     const signupLink = document.getElementById('signup-link');
+    const roleInput = document.getElementById('role-input');
+    const loginButton = document.querySelector('.signup-form button');
 
     let color = "#2563eb"; // default blue
     let hover = "#1e40af"; // dark blue
 
+    // Apply role-based changes to heading and other elements
     if (type === 'provider') {
       heading.textContent = "Login as Provider";
       signupLink.href = "signup?type=provider";
+      roleInput.value = "provider";
+      loginButton.classList.add('provider'); // Add 'provider' class
     } else if (type === 'seeker') {
       heading.textContent = "Login as Seeker";
-      color = "#10b981"; // green
-      hover = "#059669"; // dark green
       signupLink.href = "signup?type=seeker";
+      color = "#10b981"; // Green for seekers
+      hover = "#059669"; // Dark green for hover effect
+      roleInput.value = "seeker";
+      loginButton.classList.add('seeker'); // Add 'seeker' class
     } else {
       heading.textContent = "Login";
       signupLink.href = "signup";
+      roleInput.value = "";
     }
 
+    // Inject dynamic CSS based on role
     themeStyle.textContent = `
       .signup-header h1 {
         color: ${color};

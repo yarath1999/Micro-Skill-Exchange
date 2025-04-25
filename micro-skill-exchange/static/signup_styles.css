@@ -1,63 +1,127 @@
+/* Header Styling */
 .signup-header {
-    text-align: center;
-    background: linear-gradient(to right, #dbeafe, #d1fae5);
-    padding: 3rem 1rem 1rem;
-    border-bottom: 1px solid #e5e7eb;
-  }
-  
-  .signup-header h1 {
-    font-size: 2.5rem;
-    color: #2563eb;
-    margin-bottom: 0.5rem;
-  }
-  
-  .sub-heading {
-    font-size: 1rem;
-    color: #6b7280;
-    margin-bottom: 1rem;
-  }
-  
-  .signup-container {
-    max-width: 500px;
-    margin: 2rem auto;
-    background: #fff;
-    padding: 2.5rem 2rem;
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-  }
-  
-  .signup-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-  }
-  
-  .signup-form input {
-    padding: 0.9rem 1rem;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-    transition: border 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .signup-form input:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-    outline: none;
-  }
-  
-  .signup-form button {
-    background: #2563eb;
-    color: #fff;
-    border: none;
-    padding: 0.9rem;
-    font-size: 1rem;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  .signup-form button:hover {
-    background: #1e40af;
-  }
-  
+  text-align: center;
+  background: linear-gradient(to right, #dbeafe, #d1fae5);
+  padding: 3rem 1rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.signup-header h1 {
+  font-size: 2.5rem;
+  color: #2563eb; /* Default blue for heading */
+  margin-bottom: 0.5rem;
+}
+
+.sub-heading {
+  font-size: 1rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+/* Signup Form Container */
+.signup-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 2.5rem 2rem;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+}
+
+/* Form Styles */
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.signup-form input {
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.signup-form input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  outline: none;
+}
+
+.login_button {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.login-link {
+  font-size: 1rem;
+  color: #333;
+  text-align: center; 
+  margin-top: 1rem;
+}
+
+.login-link a {
+  color: #3366cc;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.login-link a:hover {
+  color: #1a4aa3;
+  text-decoration: underline;
+}
+
+/* Button Styles */
+.signup-form button {
+  background: #2563eb; /* Default blue for buttons */
+  color: #fff;
+  border: none;
+  padding: 0.9rem;
+  font-size: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.signup-form button:hover {
+  background: #1e40af;
+}
+
+/* Specific Role Styles */
+.signup-header h1.provider {
+  color: #2563eb; /* Blue for providers */
+}
+
+.signup-header h1.seeker {
+  color: #10b981; /* Green for seekers */
+}
+
+/* Input field and button changes for specific roles */
+.signup-form input.provider:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.signup-form input.seeker:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+.signup-form button.provider {
+  background: #2563eb; /* Blue for provider login button */
+}
+
+.signup-form button.seeker {
+  background: #10b981; /* Green for seeker login button */
+}
+
+.signup-form button:hover.provider {
+  background: #1e40af;
+}
+
+.signup-form button:hover.seeker {
+  background: #059669;
+}

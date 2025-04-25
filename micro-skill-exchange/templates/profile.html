@@ -12,6 +12,7 @@
       <h2 id="profile-title">Profile</h2>
       <img id="profile-img" src="https://via.placeholder.com/120" class="profile-photo" />
       <input type="file" id="photo-upload" />
+      <span id="photo-status"></span> <!-- To show photo upload status -->
     </div>
 
     <form id="profile-form">
@@ -33,14 +34,18 @@
     const dynamicFields = document.getElementById('dynamic-fields');
     const photoUpload = document.getElementById('photo-upload');
     const profileImg = document.getElementById('profile-img');
+    const photoStatus = document.getElementById('photo-status');
 
+    // Handle profile photo upload
     photoUpload.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (file) {
         profileImg.src = URL.createObjectURL(file);
+        photoStatus.textContent = `Photo uploaded: ${file.name}`;
       }
     });
 
+    // Based on user role (provider or seeker), adjust profile form fields
     if (type === 'provider') {
       title.textContent = "Provider Profile";
       dynamicFields.innerHTML = `
@@ -84,6 +89,15 @@
     } else {
       title.textContent = "Profile";
     }
+
+    // Optional: Add form validation for required fields
+    document.getElementById('profile-form').addEventListener('submit', function(event) {
+      const description = document.querySelector('textarea[name="description"]').value;
+      if (!description) {
+        alert('Please add a description to your profile.');
+        event.preventDefault();
+      }
+    });
   </script>
 </body>
 </html>

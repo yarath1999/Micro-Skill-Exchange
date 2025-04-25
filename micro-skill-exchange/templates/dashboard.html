@@ -10,9 +10,12 @@
   <div id="dashboard" class="dashboard">
     <div class="dashboard-header">
       <div class="dashboard-title">Opportunities</div>
+      
+      <!-- Add Opportunity button visible only for Providers -->
       <button id="addOpportunityBtn" class="btn btn-add">Add Opportunity</button>
     </div>
 
+    <!-- Filter Section -->
     <div class="filter-section">
       <div class="dropdown">
         <button class="dropdown-btn" onclick="toggleDropdown()">Select Skills</button>
@@ -26,14 +29,18 @@
       </div>
     </div>
 
+    <!-- Opportunities List -->
     <div id="opportunitiesList">
-      <!-- Example card -->
+      <!-- Example Opportunity Card -->
       <div class="opportunity-card" data-skills="web development">
         <div class="opportunity-title">Web Developer Needed</div>
         <div class="opportunity-description">Build a responsive landing page using HTML, CSS, and JavaScript.</div>
         <div class="btn-group">
+          <!-- Button for Seekers: Apply, View -->
           <button class="btn btn-apply">Apply</button>
           <button class="btn btn-view">View Details</button>
+
+          <!-- Buttons for Providers: Edit, Remove -->
           <button class="btn btn-edit">Edit</button>
           <button class="btn btn-remove">Remove</button>
         </div>
@@ -46,19 +53,24 @@
     const type = urlParams.get('type');
     const dashboard = document.getElementById('dashboard');
 
+    // Role-based Display Logic
     if (type === 'seeker') {
+      // Apply 'seeker-theme' class and hide provider-related buttons
       dashboard.classList.add('seeker-theme');
       document.getElementById('addOpportunityBtn').style.display = 'none';
       document.querySelectorAll('.btn-edit, .btn-remove').forEach(btn => btn.style.display = 'none');
     } else {
+      // Hide buttons for Seekers (Apply, View) for Providers
       document.querySelectorAll('.btn-apply, .btn-view').forEach(btn => btn.style.display = 'none');
     }
 
+    // Toggle the visibility of the skill filter dropdown
     function toggleDropdown() {
       const dropdown = document.getElementById('dropdownContent');
       dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
     }
 
+    // Filter opportunities based on selected skills
     function filterBySkills() {
       const checkboxes = document.querySelectorAll('#dropdownContent input[type="checkbox"]');
       const selectedSkills = Array.from(checkboxes)
@@ -73,6 +85,7 @@
       });
     }
 
+    // Close dropdown when clicking outside
     window.onclick = function(event) {
       if (!event.target.matches('.dropdown-btn')) {
         const dropdowns = document.getElementsByClassName("dropdown-content");

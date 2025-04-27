@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from datetime import datetime
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -61,7 +61,7 @@ def login():
         if user and check_password_hash(user.password, password):
             session['user_id'] = user.id
             flash('Login successful!', 'success')
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('dashboard', type = user.role))
         else:
             flash('Invalid email or password.', 'error')
 
@@ -73,7 +73,9 @@ def dashboard():
         flash('Please login to continue.', 'error')
         return redirect(url_for('login'))
     user = User.query.get(session['user_id'])
-    return render_template('dashboard.html', user=user)
+    # The type parameter will come from the URL, but we'll use user.role as fallback
+    role_type = request.args.get('type', user.role)
+    return render_template('dashboard.html', user=user, type=role_type)
 
 @app.route('/logout')
 def logout():

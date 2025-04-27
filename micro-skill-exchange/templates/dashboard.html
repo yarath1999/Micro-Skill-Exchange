@@ -5,17 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='dashboard_styles.css') }}" />
+  <style>
+    /* You can move this to dashboard_styles.css later */
+    .filter-section { margin-top: 20px; }
+    .btn { margin: 5px; }
+    .btn-group { margin-top: 10px; }
+  </style>
 </head>
+
 <body>
   <div id="dashboard" class="dashboard">
     <div class="dashboard-header">
       <div class="dashboard-title">Opportunities</div>
       
-      <!-- Add Opportunity button visible only for Providers -->
+      <!-- Add Opportunity button (only for Providers) -->
       <button id="addOpportunityBtn" class="btn btn-add">Add Opportunity</button>
     </div>
 
-    <!-- Filter Section -->
+    <!-- Filter Section (only for Seekers) -->
     <div class="filter-section">
       <div class="dropdown">
         <button class="dropdown-btn" onclick="toggleDropdown()">Select Skills</button>
@@ -29,18 +36,18 @@
       </div>
     </div>
 
-    <!-- Opportunities List -->
+    <!-- Opportunities List (visible to both) -->
     <div id="opportunitiesList">
       <!-- Example Opportunity Card -->
       <div class="opportunity-card" data-skills="web development">
         <div class="opportunity-title">Web Developer Needed</div>
         <div class="opportunity-description">Build a responsive landing page using HTML, CSS, and JavaScript.</div>
         <div class="btn-group">
-          <!-- Button for Seekers: Apply, View -->
+          <!-- Buttons for Seekers -->
           <button class="btn btn-apply">Apply</button>
           <button class="btn btn-view">View Details</button>
 
-          <!-- Buttons for Providers: Edit, Remove -->
+          <!-- Buttons for Providers -->
           <button class="btn btn-edit">Edit</button>
           <button class="btn btn-remove">Remove</button>
         </div>
@@ -50,18 +57,37 @@
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const type = urlParams.get('type');
+    const type = urlParams.get('type'); // 'seeker' or 'provider'
     const dashboard = document.getElementById('dashboard');
 
     // Role-based Display Logic
     if (type === 'seeker') {
-      // Apply 'seeker-theme' class and hide provider-related buttons
       dashboard.classList.add('seeker-theme');
+
+      // Hide Add Opportunity button
       document.getElementById('addOpportunityBtn').style.display = 'none';
+
+      // Hide Edit and Remove buttons (Provider-only)
       document.querySelectorAll('.btn-edit, .btn-remove').forEach(btn => btn.style.display = 'none');
-    } else {
-      // Hide buttons for Seekers (Apply, View) for Providers
+
+      // Show Apply and View buttons
+      document.querySelectorAll('.btn-apply, .btn-view').forEach(btn => btn.style.display = 'inline-block');
+
+      // Show Filter section
+      document.querySelector('.filter-section').style.display = 'block';
+    } 
+    else if (type === 'provider') {
+      // Show Add Opportunity button
+      document.getElementById('addOpportunityBtn').style.display = 'inline-block';
+
+      // Show Edit and Remove buttons
+      document.querySelectorAll('.btn-edit, .btn-remove').forEach(btn => btn.style.display = 'inline-block');
+
+      // Hide Apply and View buttons
       document.querySelectorAll('.btn-apply, .btn-view').forEach(btn => btn.style.display = 'none');
+
+      // Hide Filter section
+      document.querySelector('.filter-section').style.display = 'none';
     }
 
     // Toggle the visibility of the skill filter dropdown
@@ -98,5 +124,6 @@
       }
     }
   </script>
+
 </body>
 </html>

@@ -4,11 +4,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///micro_skill_exchange.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 db = SQLAlchemy(app)
 
 # Define the User model
 class User(db.Model):
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
     role = db.Column(db.String(20), nullable=False)
@@ -28,7 +29,7 @@ def signup():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        role = request.form['role']
+        role = request.form.get('type', 'general')
         name = request.form.get('name')
         skill = request.form.get('skill')
         experience = request.form.get('experience')
@@ -39,7 +40,7 @@ def signup():
             flash('Email already exists. Please login or use another email.', 'error')
             return redirect(url_for('signup'))
 
-        hashed_password = generate_password_hash(password, method='sha256')
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
         new_user = User(email=email, password=hashed_password, role=role,
                         name=name, skill=skill, experience=experience,
                         interest=interest, availability=availability)

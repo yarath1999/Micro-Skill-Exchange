@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Applications</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard_styles.css') }}" />
+</head>
+
+<body class="seeker-theme">
+  <div id="myApplications" class="dashboard">
+    <div class="dashboard-header">
+      <div class="dashboard-title">My Applications</div>
+      <a href="{{ url_for('dashboard') }}" class="btn btn-back">Back to Dashboard</a>
+    </div>
+
+    {% if opportunities %}
+      <div id="applicationsList">
+        {% for item in opportunities %}
+          <div class="opportunity-card">
+            <div class="opportunity-title">{{ item.opportunity.title }}</div>
+            <div class="opportunity-description">{{ item.opportunity.description }}</div>
+            <div class="opportunity-location">📍 {{ item.opportunity.location }}</div>
+            <div class="application-date">Applied on: {{ item.application.applied_at.strftime('%B %d, %Y') }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>You have not applied to any opportunities yet.</p>
+    {% endif %}
+  </div>
+</body>
+</html>

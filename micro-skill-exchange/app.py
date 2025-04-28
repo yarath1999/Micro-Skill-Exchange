@@ -68,7 +68,11 @@ def dashboard():
     user = User.query.get(session['user_id'])
     opportunities = Opportunity.query.all()
 
-    return render_template('dashboard.html', user=user, opportunities=opportunities)
+    applied_opportunity_ids = []
+    if user.role.lower() == 'seeker':
+        applied_opportunity_ids = [app.opportunity_id for app in Application.query.filter_by(user_id=user.id).all()]
+
+    return render_template('dashboard.html', user=user, opportunities=opportunities, applied_opportunity_ids=applied_opportunity_ids)
 
 @app.route('/dashboard/add', methods=['GET', 'POST'])
 def add_opportunity():
@@ -131,7 +135,7 @@ def delete_opportunity(id):
         return redirect(url_for('login'))
 
     user = User.query.get(session['user_id'])
-    opportunity = Opportunity.query.get(id)
+    opportunity = Opportunity.query.get_or_404(id)
 
     if opportunity.created_by != user.id:
         flash('You are not allowed to delete this opportunity.', 'error')
@@ -168,6 +172,31 @@ def apply_opportunity(opportunity_id):
         flash('Application submitted successfully!', 'success')
 
     return redirect(url_for('dashboard'))
+
+@app.route('/my_applications')
+def my_applications():
+    if 'user_id' not in session:
+        flash('Please login first.', 'error')
+        return redirect(url_for('login'))
+
+    user = User.query.get(session['user_id'])
+    if user.role.lower() != 'seeker':
+        flash('Unauthorized access.', 'error')
+        return redirect(url_for('dashboard'))
+
+    applications = Application.query.filter_by(user_id=user.id).all()
+
+    # 🛠️ Get related opportunities:
+    opportunities = []
+    for app in applications:
+        opportunity = Opportunity.query.get(app.opportunity_id)
+        if opportunity:
+            opportunities.append({
+                'application': app,
+                'opportunity': opportunity
+            })
+
+    return render_template('my_applications.html', user=user, opportunities=opportunities)
 
 @app.route('/logout')
 def logout():

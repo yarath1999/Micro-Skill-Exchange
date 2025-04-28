@@ -5,19 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='dashboard_styles.css') }}" />
+  <style>
+    /* New style for applied button */
+    button.btn.btn-apply.btn-applied {
+      background-color: #aaa !important; /* Grey background */
+      cursor: not-allowed !important;
+      color: white !important;
+      border: none !important;
+    }
+  </style>
 </head>
 
-<body>
-  <div id="dashboard" class="dashboard">
-    <div class="dashboard-header">
-      <div class="dashboard-title">Opportunities</div>
+<body class="{% if user.role == 'seeker' %}seeker-theme{% endif %}">
+<div class="dashboard-header">
+  <div class="dashboard-title">Opportunities</div>
 
-      {% if user.role == 'provider' %}
-        <a href="{{ url_for('add_opportunity') }}" class="btn btn-add">Add Opportunity</a>
-      {% endif %}
-    </div>
+  <div class="dashboard-actions">
+    {% if user.role.lower() == 'seeker' %}
+      <a href="{{ url_for('my_applications') }}" class="btn btn-view">My Applications</a>
+    {% endif %}
+    
+    {% if user.role == 'provider' %}
+      <a href="{{ url_for('add_opportunity') }}" class="btn btn-add">Add Opportunity</a>
+    {% endif %}
+  </div>
+</div>
 
-    {% if user.role == 'seeker' %}
+    {% if user.role.lower() == 'seeker' %}
     <!-- Filter Section for Seekers -->
     <div class="filter-section">
       <div class="dropdown">
@@ -45,9 +59,19 @@
         <div class="btn-group">
           {% if user.role == 'seeker' %}
             <form action="{{ url_for('apply_opportunity', opportunity_id=opportunity.id) }}" method="post" style="display:inline;">
-              <button type="submit" class="btn btn-apply">Apply</button>
+              <button 
+                type="submit" 
+                class="btn btn-apply {% if opportunity.id in applied_opportunity_ids %}btn-applied{% endif %}"
+                {% if opportunity.id in applied_opportunity_ids %}disabled{% endif %}
+              >
+                {% if opportunity.id in applied_opportunity_ids %}
+                  Applied
+                {% else %}
+                  Apply
+                {% endif %}
+              </button>
             </form>
-            <button class="btn btn-view">View Details</button>
+            <button class="btn btn-view" onclick="openModal('{{ opportunity.title }}', '{{ opportunity.description }}', '{{ opportunity.location }}')">View Details</button>
 
           {% elif user.role == 'provider' and opportunity.created_by == user.id %}
             <a href="{{ url_for('edit_opportunity', id=opportunity.id) }}" class="btn btn-edit">Edit</a>
@@ -59,6 +83,16 @@
         </div>
       </div>
       {% endfor %}
+    </div>
+  </div>
+
+  <!-- Modal Popup -->
+  <div id="opportunityModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2 id="modalTitle"></h2>
+      <p id="modalDescription"></p>
+      <p id="modalLocation"></p>
     </div>
   </div>
 
@@ -83,6 +117,10 @@
     }
 
     window.onclick = function(event) {
+      const modal = document.getElementById('opportunityModal');
+      if (event.target == modal) {
+        closeModal();
+      }
       if (!event.target.matches('.dropdown-btn')) {
         const dropdowns = document.getElementsByClassName("dropdown-content");
         for (let i = 0; i < dropdowns.length; i++) {
@@ -92,6 +130,17 @@
           }
         }
       }
+    }
+
+    function openModal(title, description, location) {
+      document.getElementById('modalTitle').innerText = title;
+      document.getElementById('modalDescription').innerText = description;
+      document.getElementById('modalLocation').innerText = "Location: " + location;
+      document.getElementById('opportunityModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('opportunityModal').style.display = 'none';
     }
   </script>
 

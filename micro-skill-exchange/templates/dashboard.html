@@ -5,24 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='dashboard_styles.css') }}" />
-  <style>
-    /* You can move this to dashboard_styles.css later */
-    .filter-section { margin-top: 20px; }
-    .btn { margin: 5px; }
-    .btn-group { margin-top: 10px; }
-  </style>
 </head>
 
 <body>
   <div id="dashboard" class="dashboard">
     <div class="dashboard-header">
       <div class="dashboard-title">Opportunities</div>
-      
-      <!-- Add Opportunity button (only for Providers) -->
-      <button id="addOpportunityBtn" class="btn btn-add">Add Opportunity</button>
+
+      {% if user.role == 'provider' %}
+        <a href="{{ url_for('add_opportunity') }}" class="btn btn-add">Add Opportunity</a>
+      {% endif %}
     </div>
 
-    <!-- Filter Section (only for Seekers) -->
+    {% if user.role == 'seeker' %}
+    <!-- Filter Section for Seekers -->
     <div class="filter-section">
       <div class="dropdown">
         <button class="dropdown-btn" onclick="toggleDropdown()">Select Skills</button>
@@ -32,76 +28,51 @@
           <label><input type="checkbox" value="content writing" onchange="filterBySkills()"> Content Writing</label>
           <label><input type="checkbox" value="digital marketing" onchange="filterBySkills()"> Digital Marketing</label>
           <label><input type="checkbox" value="data entry" onchange="filterBySkills()"> Data Entry</label>
+          <label><input type="checkbox" value="cashier" onchange="filterBySkills()"> Cashier</label>
+          <label><input type="checkbox" value="receptionist" onchange="filterBySkills()"> Receptionist</label>
         </div>
       </div>
     </div>
+    {% endif %}
 
-    <!-- Opportunities List (visible to both) -->
     <div id="opportunitiesList">
-      <!-- Example Opportunity Card -->
-      <div class="opportunity-card" data-skills="web development">
-        <div class="opportunity-title">Web Developer Needed</div>
-        <div class="opportunity-description">Build a responsive landing page using HTML, CSS, and JavaScript.</div>
-        <div class="btn-group">
-          <!-- Buttons for Seekers -->
-          <button class="btn btn-apply">Apply</button>
-          <button class="btn btn-view">View Details</button>
+      {% for opportunity in opportunities %}
+      <div class="opportunity-card" data-skills="{{ opportunity.title | lower }}">
+        <div class="opportunity-title">{{ opportunity.title }}</div>
+        <div class="opportunity-description">{{ opportunity.description }}</div>
+        <div class="opportunity-location">📍 {{ opportunity.location }}</div>
 
-          <!-- Buttons for Providers -->
-          <button class="btn btn-edit">Edit</button>
-          <button class="btn btn-remove">Remove</button>
+        <div class="btn-group">
+          {% if user.role == 'seeker' %}
+            <form action="{{ url_for('apply_opportunity', opportunity_id=opportunity.id) }}" method="post" style="display:inline;">
+              <button type="submit" class="btn btn-apply">Apply</button>
+            </form>
+            <button class="btn btn-view">View Details</button>
+
+          {% elif user.role == 'provider' and opportunity.created_by == user.id %}
+            <a href="{{ url_for('edit_opportunity', id=opportunity.id) }}" class="btn btn-edit">Edit</a>
+
+            <form action="{{ url_for('delete_opportunity', id=opportunity.id) }}" method="post" style="display:inline;">
+              <button type="submit" class="btn btn-remove" onclick="return confirm('Are you sure you want to delete this opportunity?')">Remove</button>
+            </form>
+          {% endif %}
         </div>
       </div>
+      {% endfor %}
     </div>
   </div>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const type = urlParams.get('type'); // 'seeker' or 'provider'
-    const dashboard = document.getElementById('dashboard');
-
-    // Role-based Display Logic
-    if (type === 'seeker') {
-      dashboard.classList.add('seeker-theme');
-
-      // Hide Add Opportunity button
-      document.getElementById('addOpportunityBtn').style.display = 'none';
-
-      // Hide Edit and Remove buttons (Provider-only)
-      document.querySelectorAll('.btn-edit, .btn-remove').forEach(btn => btn.style.display = 'none');
-
-      // Show Apply and View buttons
-      document.querySelectorAll('.btn-apply, .btn-view').forEach(btn => btn.style.display = 'inline-block');
-
-      // Show Filter section
-      document.querySelector('.filter-section').style.display = 'block';
-    } 
-    else if (type === 'provider') {
-      // Show Add Opportunity button
-      document.getElementById('addOpportunityBtn').style.display = 'inline-block';
-
-      // Show Edit and Remove buttons
-      document.querySelectorAll('.btn-edit, .btn-remove').forEach(btn => btn.style.display = 'inline-block');
-
-      // Hide Apply and View buttons
-      document.querySelectorAll('.btn-apply, .btn-view').forEach(btn => btn.style.display = 'none');
-
-      // Hide Filter section
-      document.querySelector('.filter-section').style.display = 'none';
-    }
-
-    // Toggle the visibility of the skill filter dropdown
     function toggleDropdown() {
       const dropdown = document.getElementById('dropdownContent');
       dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
     }
 
-    // Filter opportunities based on selected skills
     function filterBySkills() {
       const checkboxes = document.querySelectorAll('#dropdownContent input[type="checkbox"]');
       const selectedSkills = Array.from(checkboxes)
         .filter(checkbox => checkbox.checked)
-        .map(checkbox => checkbox.value);
+        .map(checkbox => checkbox.value.toLowerCase());
 
       const cards = document.querySelectorAll('.opportunity-card');
       cards.forEach(card => {
@@ -111,7 +82,6 @@
       });
     }
 
-    // Close dropdown when clicking outside
     window.onclick = function(event) {
       if (!event.target.matches('.dropdown-btn')) {
         const dropdowns = document.getElementsByClassName("dropdown-content");

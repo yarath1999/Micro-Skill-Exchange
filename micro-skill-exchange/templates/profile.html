@@ -9,94 +9,113 @@
 <body>
   <div class="profile-container">
     <div class="profile-header">
-      <h2 id="profile-title">Profile</h2>
-      <img id="profile-img" src="https://via.placeholder.com/120" class="profile-photo" />
-      <input type="file" id="photo-upload" />
-      <span id="photo-status"></span> <!-- To show photo upload status -->
+      <h2 id="profile-title">{{ user.role.capitalize() }} Profile</h2>
+
+      {% if user.profile_picture %}
+        <img src="{{ url_for('static', filename='uploads/' + user.profile_picture) }}?v={{ upload_version }}" alt="Profile Picture" style="width:150px; height:150px; object-fit:cover;">
+      {% else %}
+        <img src="{{ url_for('static', filename='uploads/placeholder.png') }}" alt="Default Profile Picture" style="width:150px; height:150px; object-fit:cover;">
+      {% endif %}
     </div>
 
-    <form id="profile-form">
+    <form id="profile-form" method="POST" action="{{ url_for('profile') }}" enctype="multipart/form-data">
       <div class="form-group">
-        <label>Description</label>
-        <textarea name="description" placeholder="Describe yourself..."></textarea>
+        <label>Change Profile Photo</label>
+        <input type="file" name="photo" accept="image/*" id="photoInput" disabled />
       </div>
 
-      <div id="dynamic-fields"></div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea name="description" placeholder="Describe yourself..." disabled>{{ user.description or '' }}</textarea>
+      </div>
 
-      <button type="submit" class="btn-save">Save Profile</button>
+      {% if user.role.lower() == 'provider' %}
+        <div class="form-group">
+          <label>Work (Title + Description)</label>
+          <textarea name="work" placeholder="e.g. Logo Design - Created 50+ brand logos..." disabled>{{ user.work or '' }}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Types of Jobs Offered</label>
+          <input type="text" name="jobs" placeholder="e.g. Graphic Design, Frontend Dev" value="{{ user.jobs or '' }}" disabled />
+        </div>
+        <div class="form-group">
+          <label>Expected Seeker Skills</label>
+          <input type="text" name="skills" placeholder="e.g. Figma, HTML/CSS, Canva" value="{{ user.skills_needed or '' }}" disabled />
+        </div>
+        <div class="form-group">
+          <label>Contact Details</label>
+          <input type="text" name="contact" placeholder="e.g. email@example.com, +1234567890" value="{{ user.contact_details or '' }}" disabled />
+        </div>
+
+      {% elif user.role.lower() == 'seeker' %}
+        <div class="form-group">
+          <label>Skill Set</label>
+          <input type="text" name="skills" placeholder="e.g. HTML, Python, Photoshop" value="{{ user.skill or '' }}" disabled />
+        </div>
+        <div class="form-group">
+          <label>Academic Qualification</label>
+          <input type="text" name="qualification" placeholder="e.g. B.Sc. Computer Science" value="{{ user.qualification or '' }}" disabled />
+        </div>
+        <div class="form-group">
+          <label>Work Experience</label>
+          <textarea name="experience" placeholder="e.g. 1 year as freelance designer..." disabled>{{ user.experience or '' }}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Total Income Earned</label>
+          <div class="income-display">₹{{ user.total_income or 0 }}</div>
+        </div>
+      {% endif %}
+
+      <!-- Buttons aligned together -->
+      <div class="button-group">
+        <button type="button" class="btn-edit" id="edit-btn">Edit Profile</button>
+        <button type="submit" class="btn-save" id="save-btn" disabled>Save Profile</button>
+        <button type="button" class="btn-back" onclick="history.back()">Back</button>
+      </div>
     </form>
   </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const type = params.get('type');
-    const title = document.getElementById('profile-title');
-    const dynamicFields = document.getElementById('dynamic-fields');
-    const photoUpload = document.getElementById('photo-upload');
-    const profileImg = document.getElementById('profile-img');
-    const photoStatus = document.getElementById('photo-status');
-
-    // Handle profile photo upload
-    photoUpload.addEventListener('change', (e) => {
-      const file = e.target.files[0];
+    // Validate image format
+    document.getElementById('photoInput').addEventListener('change', function() {
+      const file = this.files[0];
       if (file) {
-        profileImg.src = URL.createObjectURL(file);
-        photoStatus.textContent = `Photo uploaded: ${file.name}`;
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+        if (!allowedTypes.includes(file.type)) {
+          alert('Invalid file format. Only JPG, JPEG, and PNG files are allowed.');
+          this.value = ''; // Clear the file input
+        }
       }
     });
 
-    // Based on user role (provider or seeker), adjust profile form fields
-    if (type === 'provider') {
-      title.textContent = "Provider Profile";
-      dynamicFields.innerHTML = `
-        <div class="form-group">
-          <label>Work (Title + Description)</label>
-          <textarea name="work" placeholder="e.g. Logo Design - Created 50+ brand logos..."></textarea>
-        </div>
-        <div class="form-group">
-          <label>Types of Jobs Offered</label>
-          <input type="text" name="jobs" placeholder="e.g. Graphic Design, Frontend Dev" />
-        </div>
-        <div class="form-group">
-          <label>Expected Seeker Skills</label>
-          <input type="text" name="skills" placeholder="e.g. Figma, HTML/CSS, Canva" />
-        </div>
-        <div class="form-group">
-          <label>Contact Details</label>
-          <input type="text" name="contact" placeholder="e.g. email@example.com, +1234567890" />
-        </div>
-      `;
-    } else if (type === 'seeker') {
-      title.textContent = "Seeker Profile";
-      dynamicFields.innerHTML = `
-        <div class="form-group">
-          <label>Skill Set</label>
-          <input type="text" name="skills" placeholder="e.g. HTML, Python, Photoshop" />
-        </div>
-        <div class="form-group">
-          <label>Academic Qualification</label>
-          <input type="text" name="qualification" placeholder="e.g. B.Sc. Computer Science" />
-        </div>
-        <div class="form-group">
-          <label>Work Experience</label>
-          <textarea name="experience" placeholder="e.g. 1 year as freelance designer..."></textarea>
-        </div>
-        <div class="form-group">
-          <label>Total Income Earned</label>
-          <div class="income-display">₹18,500</div>
-        </div>
-      `;
-    } else {
-      title.textContent = "Profile";
-    }
+    // Enable editing when Edit button clicked
+    document.getElementById('edit-btn').addEventListener('click', function() {
+      const fields = document.querySelectorAll('#profile-form input, #profile-form textarea');
+      fields.forEach(field => field.disabled = false);
+      document.getElementById('save-btn').disabled = false;
+    });
 
-    // Optional: Add form validation for required fields
+    // Handle form submission with reload
     document.getElementById('profile-form').addEventListener('submit', function(event) {
-      const description = document.querySelector('textarea[name="description"]').value;
-      if (!description) {
-        alert('Please add a description to your profile.');
-        event.preventDefault();
-      }
+      event.preventDefault();
+      const formData = new FormData(this);
+
+      fetch(this.action, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (response.ok) {
+          alert('Profile updated successfully!');
+          location.reload();
+        } else {
+          alert('Failed to update profile.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred.');
+      });
     });
   </script>
 </body>

@@ -50,6 +50,17 @@ body {
   color: white;
 }
 
+/* Logout button */
+.btn-logout {
+  background: #ef4444; /* red */
+  color: white;
+}
+
+.btn-logout:hover {
+  background: #dc2626;
+}
+
+
 .btn-view {
   background: #6b7280;
   color: white;
@@ -181,7 +192,11 @@ body {
   width: 90%;
   max-width: 500px;
   position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  font-family: 'Segoe UI', sans-serif;
+  line-height: 1.5;
 }
+
 
 .close {
   position: absolute;
@@ -221,3 +236,57 @@ body {
   font-size: 1.5rem;
   cursor: pointer;
 }
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.dashboard-left {
+  display: flex;
+  align-items: center;
+}
+
+.dashboard-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #111827;
+}
+
+.dashboard-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.profile-icon {
+  width: 42px;
+  align-items: center;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0; /* Prevent profile icon from shrinking or overlapping */
+}
+
+.profile-icon img.profile-pic,
+.profile-icon .default-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: white;
+  font-weight: bold;
+}
+

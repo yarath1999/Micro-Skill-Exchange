@@ -6,143 +6,310 @@
   <title>Dashboard</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='dashboard_styles.css') }}" />
   <style>
-    /* New style for applied button */
     button.btn.btn-apply.btn-applied {
-      background-color: #aaa !important; /* Grey background */
+      background-color: #aaa !important;
       cursor: not-allowed !important;
       color: white !important;
       border: none !important;
+    }
+    button.btn.btn-add:disabled {
+      background-color: #bbb !important;
+      cursor: not-allowed !important;
+      color: white !important;
+      border: none !important;
+    }
+    .applicants-section {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-top: 1px solid #ccc;
+    }
+    .applicant-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+    #flash-message {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      z-index: 9999;
+    }
+    .profile-icon {
+      position: relative;
+      right: 15px;
+    }
+    .profile-icon img.profile-pic {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #ddd;
+      cursor: pointer;
+    }
+    .default-avatar {
+      width: 40px;
+      height: 40px;
+      background-color: #6c757d;
+      color: white;
+      font-weight: bold;
+      font-size: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #ddd;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .default-avatar:hover {
+      transform: scale(1.1);
     }
   </style>
 </head>
 
 <body class="{% if user.role == 'seeker' %}seeker-theme{% endif %}">
-<div class="dashboard-header">
-  <div class="dashboard-title">Opportunities</div>
 
-  <div class="dashboard-actions">
-    {% if user.role.lower() == 'seeker' %}
-      <a href="{{ url_for('my_applications') }}" class="btn btn-view">My Applications</a>
-    {% endif %}
-    
+<!-- Flash messages -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div id="flash-message">
+      {% for message in messages %}
+        <div class="flash">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<div class="dashboard-header">
+  <div class="dashboard-left">
+    <div class="dashboard-title">Opportunities</div>
+  </div>
+
+  <div class="dashboard-right">
+    <a href="{{ url_for('index') }}" class="btn btn-logout">Logout</a>
     {% if user.role == 'provider' %}
       <a href="{{ url_for('add_opportunity') }}" class="btn btn-add">Add Opportunity</a>
+    {% elif user.role.lower() == 'seeker' %}
+      <a href="{{ url_for('my_applications') }}" class="btn btn-view">My Applications</a>
     {% endif %}
+
+    <div class="profile-icon">
+      <a href="{{ url_for('profile') }}">
+        {% if user.profile_picture %}
+          <img src="{{ url_for('static', filename='uploads/' + user.profile_picture) }}?v={{ upload_version }}" alt="Profile" class="profile-pic">
+        {% else %}
+          <div class="default-avatar">{{ (user.name or user.email)[0] | upper }}</div>
+        {% endif %}
+      </a>
+    </div>
   </div>
 </div>
 
-    {% if user.role.lower() == 'seeker' %}
-    <!-- Filter Section for Seekers -->
-    <div class="filter-section">
-      <div class="dropdown">
-        <button class="dropdown-btn" onclick="toggleDropdown()">Select Skills</button>
-        <div id="dropdownContent" class="dropdown-content">
-          <label><input type="checkbox" value="web development" onchange="filterBySkills()"> Web Development</label>
-          <label><input type="checkbox" value="graphic design" onchange="filterBySkills()"> Graphic Design</label>
-          <label><input type="checkbox" value="content writing" onchange="filterBySkills()"> Content Writing</label>
-          <label><input type="checkbox" value="digital marketing" onchange="filterBySkills()"> Digital Marketing</label>
-          <label><input type="checkbox" value="data entry" onchange="filterBySkills()"> Data Entry</label>
-          <label><input type="checkbox" value="cashier" onchange="filterBySkills()"> Cashier</label>
-          <label><input type="checkbox" value="receptionist" onchange="filterBySkills()"> Receptionist</label>
-        </div>
-      </div>
+{% if user.role.lower() == 'seeker' %}
+<div class="filter-section">
+  <div class="dropdown">
+    <button class="dropdown-btn" onclick="toggleDropdown()">Select Skills</button>
+    <div id="dropdownContent" class="dropdown-content">
+      <label><input type="checkbox" value="web development" onchange="filterBySkills()"> Web Development</label>
+      <label><input type="checkbox" value="graphic design" onchange="filterBySkills()"> Graphic Design</label>
+      <label><input type="checkbox" value="content writing" onchange="filterBySkills()"> Content Writing</label>
+      <label><input type="checkbox" value="digital marketing" onchange="filterBySkills()"> Digital Marketing</label>
+      <label><input type="checkbox" value="data entry" onchange="filterBySkills()"> Data Entry</label>
+      <label><input type="checkbox" value="cashier" onchange="filterBySkills()"> Cashier</label>
+      <label><input type="checkbox" value="receptionist" onchange="filterBySkills()"> Receptionist</label>
     </div>
-    {% endif %}
+  </div>
+</div>
+{% endif %}
 
-    <div id="opportunitiesList">
-      {% for opportunity in opportunities %}
-      <div class="opportunity-card" data-skills="{{ opportunity.title | lower }}">
-        <div class="opportunity-title">{{ opportunity.title }}</div>
-        <div class="opportunity-description">{{ opportunity.description }}</div>
-        <div class="opportunity-location">📍 {{ opportunity.location }}</div>
+<div id="opportunitiesList">
+  {% for opportunity in opportunities %}
+  <div class="opportunity-card"
+     data-title="{{ opportunity.title }}"
+     data-description="{{ opportunity.description }}"
+     data-location="{{ opportunity.location }}"
+     data-provider="{{ opportunity.provider.name if opportunity.provider else '' }}"
+     data-contact="{{ opportunity.provider.contact_details if opportunity.provider else 'N/A' }}"
+     data-skills-needed="{{ opportunity.provider.skills_needed if opportunity.provider else 'N/A' }}"
+     data-job-type="{{ opportunity.job_type if opportunity.job_type else 'Not specified' }}"
+     data-skills="{{ opportunity.title | lower }}"
+     data-work-profile="{{ opportunity.provider.work if opportunity.provider and opportunity.provider.work else '' }}">
+    <div class="opportunity-title">{{ opportunity.title }}</div>
+    <div class="opportunity-description">{{ opportunity.description }}</div>
+    <div class="opportunity-location">📍 {{ opportunity.location }}</div>
 
-        <div class="btn-group">
-          {% if user.role == 'seeker' %}
-            <form action="{{ url_for('apply_opportunity', opportunity_id=opportunity.id) }}" method="post" style="display:inline;">
+    <div class="btn-group">
+      {% if user.role == 'seeker' %}
+        <form action="{{ url_for('apply_opportunity', opportunity_id=opportunity.id) }}" method="post" style="display:inline;">
+          <button 
+            type="submit" 
+            class="btn btn-apply {% if opportunity.id in applied_opportunity_ids %}btn-applied{% endif %}"
+            {% if opportunity.id in applied_opportunity_ids %}disabled{% endif %}>
+            {% if opportunity.id in applied_opportunity_ids %}
+              Applied
+            {% else %}
+              Apply
+            {% endif %}
+          </button>
+        </form>
+        <button class="btn btn-view" onclick="openModalFromCard(this.closest('.opportunity-card'))">View Details</button>
+
+      {% elif user.role == 'provider' and opportunity.created_by == user.id %}
+        <a href="{{ url_for('edit_opportunity', id=opportunity.id) }}" class="btn btn-edit">Edit</a>
+
+        <form action="{{ url_for('delete_opportunity', id=opportunity.id) }}" method="post" style="display:inline;">
+          <button type="submit" class="btn btn-remove" onclick="return confirm('Are you sure you want to delete this opportunity?')">Remove</button>
+        </form>
+      {% endif %}
+    </div>
+
+    {% if user.role == 'provider' and opportunity.created_by == user.id %}
+    <div class="applicants-section">
+      <strong>Applicants:</strong>
+      {% set opportunity_applications = applications | selectattr('opportunity_id', 'equalto', opportunity.id) | list %}
+      
+      {% if opportunity_applications %}
+        {% for application in opportunity_applications %}
+          <div class="applicant-item">
+            <div>
+              {{ application.user.name or application.user.email }}
+              {% if application.income_awarded %}
+                <span style="color: green;">✅</span>
+              {% endif %}
+            </div>
+            <form action="{{ url_for('award_income', application_id=application.id) }}" method="post" style="display:inline;">        
               <button 
                 type="submit" 
-                class="btn btn-apply {% if opportunity.id in applied_opportunity_ids %}btn-applied{% endif %}"
-                {% if opportunity.id in applied_opportunity_ids %}disabled{% endif %}
-              >
-                {% if opportunity.id in applied_opportunity_ids %}
-                  Applied
+                class="btn btn-add" 
+                {% if application.income_awarded %}disabled{% endif %}
+                onclick="return confirm('Are you sure you want to award income?')">
+                {% if application.income_awarded %}
+                  Awarded
                 {% else %}
-                  Apply
+                  Award ₹1000
                 {% endif %}
               </button>
             </form>
-            <button class="btn btn-view" onclick="openModal('{{ opportunity.title }}', '{{ opportunity.description }}', '{{ opportunity.location }}')">View Details</button>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div style="margin-top:5px;">No applicants yet.</div>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
 
-          {% elif user.role == 'provider' and opportunity.created_by == user.id %}
-            <a href="{{ url_for('edit_opportunity', id=opportunity.id) }}" class="btn btn-edit">Edit</a>
+<!-- Modal Popup -->
+<div id="opportunityModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
 
-            <form action="{{ url_for('delete_opportunity', id=opportunity.id) }}" method="post" style="display:inline;">
-              <button type="submit" class="btn btn-remove" onclick="return confirm('Are you sure you want to delete this opportunity?')">Remove</button>
-            </form>
-          {% endif %}
-        </div>
-      </div>
-      {% endfor %}
+    <h2 id="modalTitle"></h2>
+
+    <div style="margin-top: 10px;">
+      <h3>Work</h3>
+      <p id="modalWork"></p>
+    </div>
+
+    <p id="modalLocation"></p>
+    <p id="modalJobType"></p>
+
+    <hr>
+
+    <div>
+      <h3>Provider Details</h3>
+      <p id="modalProvider"></p>
+      <p id="modalWorkProfile"></p>
+      <p id="modalContact"></p>
+      <p id="modalSkillsNeeded"></p>
     </div>
   </div>
+</div>
 
-  <!-- Modal Popup -->
-  <div id="opportunityModal" class="modal" style="display:none;">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal()">&times;</span>
-      <h2 id="modalTitle"></h2>
-      <p id="modalDescription"></p>
-      <p id="modalLocation"></p>
-    </div>
-  </div>
 
-  <script>
-    function toggleDropdown() {
-      const dropdown = document.getElementById('dropdownContent');
-      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+<script>
+  function toggleDropdown() {
+    const dropdown = document.getElementById('dropdownContent');
+    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+  }
+
+  function filterBySkills() {
+    const checkboxes = document.querySelectorAll('#dropdownContent input[type="checkbox"]');
+    const selectedSkills = Array.from(checkboxes)
+      .filter(checkbox => checkbox.checked)
+      .map(checkbox => checkbox.value.toLowerCase());
+
+    const cards = document.querySelectorAll('.opportunity-card');
+    cards.forEach(card => {
+      const skills = card.getAttribute('data-skills') || '';
+      const show = selectedSkills.length === 0 || selectedSkills.some(skill => skills.includes(skill));
+      card.style.display = show ? 'block' : 'none';
+    });
+  }
+
+  function openModalFromCard(card) {
+  const title = card.getAttribute('data-title') || '';
+  const description = card.getAttribute('data-description') || '';
+  const location = card.getAttribute('data-location') || '';
+  const provider = card.getAttribute('data-provider');
+  const contact = card.getAttribute('data-contact');
+  const skillsNeeded = card.getAttribute('data-skills-needed');
+  const jobType = card.getAttribute('data-job-type') || 'Not specified';
+  const workProfile = card.getAttribute('data-work-profile') || '';
+
+  document.getElementById('modalTitle').innerText = title;
+  document.getElementById('modalWork').innerText = description;
+  document.getElementById('modalLocation').innerText = "📍 Location: " + location;
+  document.getElementById('modalJobType').innerText = "🛠️ Type of Job: " + jobType;
+  document.getElementById('modalWorkProfile').innerText = "📝 Work: " + workProfile;
+
+  // Show provider name only if valid
+  document.getElementById('modalProvider').innerText = provider && provider !== 'None' ? "👤 " + provider : "";
+
+  document.getElementById('modalContact').innerText = "📧 Contact: " + contact;
+  document.getElementById('modalSkillsNeeded').innerText = "💡 Skills Needed: " + skillsNeeded;
+
+  document.getElementById('opportunityModal').style.display = 'flex';
+}
+
+
+  function closeModal() {
+    document.getElementById('opportunityModal').style.display = 'none';
+  }
+
+  // Close modal when clicked outside
+  window.onclick = function(event) {
+    const modal = document.getElementById('opportunityModal');
+    if (event.target == modal) {
+      closeModal();
     }
-
-    function filterBySkills() {
-      const checkboxes = document.querySelectorAll('#dropdownContent input[type="checkbox"]');
-      const selectedSkills = Array.from(checkboxes)
-        .filter(checkbox => checkbox.checked)
-        .map(checkbox => checkbox.value.toLowerCase());
-
-      const cards = document.querySelectorAll('.opportunity-card');
-      cards.forEach(card => {
-        const skills = card.getAttribute('data-skills') || '';
-        const show = selectedSkills.length === 0 || selectedSkills.some(skill => skills.includes(skill));
-        card.style.display = show ? 'block' : 'none';
-      });
-    }
-
-    window.onclick = function(event) {
-      const modal = document.getElementById('opportunityModal');
-      if (event.target == modal) {
-        closeModal();
-      }
-      if (!event.target.matches('.dropdown-btn')) {
-        const dropdowns = document.getElementsByClassName("dropdown-content");
-        for (let i = 0; i < dropdowns.length; i++) {
-          let openDropdown = dropdowns[i];
-          if (openDropdown.style.display === 'block') {
-            openDropdown.style.display = 'none';
-          }
+    if (!event.target.matches('.dropdown-btn')) {
+      const dropdowns = document.getElementsByClassName("dropdown-content");
+      for (let i = 0; i < dropdowns.length; i++) {
+        if (dropdowns[i].style.display === 'block') {
+          dropdowns[i].style.display = 'none';
         }
       }
     }
+  }
 
-    function openModal(title, description, location) {
-      document.getElementById('modalTitle').innerText = title;
-      document.getElementById('modalDescription').innerText = description;
-      document.getElementById('modalLocation').innerText = "Location: " + location;
-      document.getElementById('opportunityModal').style.display = 'flex';
+  // Auto-hide flash messages after 3 seconds
+  setTimeout(function() {
+    var flash = document.getElementById('flash-message');
+    if (flash) {
+      flash.style.display = 'none';
     }
-
-    function closeModal() {
-      document.getElementById('opportunityModal').style.display = 'none';
-    }
-  </script>
+  }, 3000);
+</script>
 
 </body>
 </html>

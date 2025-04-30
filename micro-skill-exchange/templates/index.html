@@ -16,19 +16,39 @@
 
   <section class="roles">
     <div class="role-card provider">
-      <img src="{{ url_for('static', filename='images/Provider.jpeg') }}" alt="Provider Icon" />
-      <h2>PROVIDER</h2>
-      <p>Connect with seekers and earn money by offering short-term jobs.</p>
-      <a href="{{ url_for('signup') }}?type=provider" class="btn">I’m a Provider</a>
+      <div class="card-inner">
+        <div class="card-content-wrapper">
+          <div class="card-front">
+            <img src="{{ url_for('static', filename='images/Provider.jpeg') }}" alt="Provider">
+            <h2>Provider</h2>
+            <p>Offer your services in exchange for money or mentorship opportunities.</p>
+          </div>
+          <div class="card-back">
+            <p>A <strong>Provider</strong> is a business owner—such as someone running a shop or showroom—who hires Seekers for short-term roles like receptionist, cashier, or assistant, and pays them based on the hours or days worked.</p>
+          </div>
+        </div>
+      </div>
+      <a href="{{ url_for('signup') }}?type=provider" class="btn">I'm a Provider</a>
     </div>
-
+  
     <div class="role-card seeker">
-      <img src="{{ url_for('static', filename='images/Seeker.jpeg') }}" alt="Seeker Icon" />
-      <h2>SEEKER</h2>
-      <p>Earn money or knowledge by accepting micro-job offerings suited to your skill.</p>
+      <div class="card-inner">
+        <div class="card-content-wrapper">
+          <div class="card-front">
+            <img src="{{ url_for('static', filename='images/Seeker.jpeg') }}" alt="Seeker Icon" />
+            <h2>SEEKER</h2>
+            <p>Earn money or knowledge by accepting micro-job offerings suited to your skill.</p>
+          </div>
+          <div class="card-back">
+            <p>A <strong>Seeker</strong> is a student or freelancer with valuable skills and available time during weekdays or weekends, who is open to working with Providers to earn extra income.</p>
+          </div>
+        </div>
+      </div>
       <a href="{{ url_for('signup') }}?type=seeker" class="btn">I’m a Seeker</a>
     </div>
   </section>
+  
+  
 
   <section class="about" id="about">
     <h2 class="section-title">About Us</h2>
